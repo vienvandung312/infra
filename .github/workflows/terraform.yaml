@@ -16,9 +16,6 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
-            - name: Change Directory
-              run: cd terraform
-
             - name: Setup Terraform
               uses: hashicorp/setup-terraform@v2
               with:
@@ -31,11 +28,11 @@ jobs:
                   aws-region: ap-southeast-1
 
             - name: Terraform Initialize
-              run: terraform init
+              run: terraform -chdir=./terraform init 
 
             - name: Terraform Plan
-              run: terraform plan ./environment/dev
+              run: terraform -chdir=./terraform/environments/dev plan
 
             - name: Terraform Apply
               if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-              run: terraform apply -auto-approve ./environment/dev
+              run: terraform -auto-approve -chdir=./terraform/environments/dev apply
