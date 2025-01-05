@@ -11,3 +11,7 @@ resource "aws_vpc" "main" {
 output "vpc_id" {
     value = aws_vpc.main.id
 }
+
+locals {
+  vpc_id = aws_vpc.main.id 
+}
