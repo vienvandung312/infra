@@ -55,7 +55,7 @@ jobs:
             id-token: write
             contents: read
         env:
-            TF_PATH: ./terraform/environments/${github.event.inputs.environment}
+            TF_PATH: ./terraform/environments/dev
 
         steps: 
             - name: Checkout
