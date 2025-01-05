@@ -14,7 +14,10 @@ jobs:
             contents: read
         steps: 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
+
+            - name: Change Directory
+              run: cd terraform
 
             - name: Setup Terraform
               uses: hashicorp/setup-terraform@v2
@@ -31,8 +34,8 @@ jobs:
               run: terraform init
 
             - name: Terraform Plan
-              run: terraform plan
+              run: terraform plan ./environment/dev
 
             - name: Terraform Apply
               if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-              run: terraform apply -auto-approve
+              run: terraform apply -auto-approve ./environment/dev
