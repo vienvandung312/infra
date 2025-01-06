@@ -40,6 +40,11 @@ jobs:
           if: github.ref == 'refs/heads/main' && github.event_name == 'push'
           run: terraform -chdir=${TF_PATH} apply -auto-approve
 
+  helm-deploy:
+    name: Helm Deploy
+    runs-on: ubuntu-latest
+    needs: terraform-apply
+    steps:
         - name: Install Helm and Deploy Kafka
           run: |
             ssh -o StrictHostKeyChecking=no ubuntu@$(terraform output -raw instance_ip) 'bash -s' < ./k3s-setup.sh

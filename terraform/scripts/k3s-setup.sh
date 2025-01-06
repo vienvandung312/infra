@@ -14,4 +14,4 @@ helm repo update
 kubectl create namespace kafka
 
 # Deploy Kafka in KRaft mode
-helm install kafka bitnami/kafka -f values.yaml --namespace kafka
+helm install kafka bitnami/kafka -f ./kafka/values.yaml --namespace kafka
