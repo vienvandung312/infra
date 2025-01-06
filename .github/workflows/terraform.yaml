@@ -1,79 +1,80 @@
-name: Terraform
+name: Setting up Kafka
 
 on:
-    push:
-        branches:
-            - main
-
-    workflow_dispatch:
-      inputs:
-        environment:
-          description: 'Environment to deploy'
-          required: true
-          default: 'dev'
+  push:
+    branches:
+      - main
 
 jobs:
-    terraform-apply: 
-        name: Terraform Apply
-        runs-on: ubuntu-latest
-        permissions:
-            id-token: write
-            contents: read
-        env:
-            TF_PATH: ./terraform/environments/dev
+  terraform-apply: 
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    permissions:
+        id-token: write
+        contents: read
+    env:
+        TF_PATH: ./terraform/environments/dev
 
-        steps: 
-            - name: Checkout
-              uses: actions/checkout@v4
+    steps: 
+        - name: Checkout
+          uses: actions/checkout@v4
 
-            - name: Setup Terraform
-              uses: hashicorp/setup-terraform@v2
-              with:
-                  terraform_version: 1.5.0
-            
-            - name: Setup AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v3
-              with:
-                  role-to-assume: arn:aws:iam::730335465394:role/github_actions_role
-                  aws-region: ap-southeast-1
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v2
+          with:
+              terraform_version: 1.5.0
+        
+        - name: Setup AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v3
+          with:
+              role-to-assume: arn:aws:iam::730335465394:role/github_actions_role
+              aws-region: ap-southeast-1
 
-            - name: Terraform Initialize
-              run: terraform -chdir=${TF_PATH} init 
+        - name: Terraform Initialize
+          run: terraform -chdir=${TF_PATH} init 
 
-            - name: Terraform Plan
-              run: terraform -chdir=${TF_PATH} plan
+        - name: Terraform Plan
+          run: terraform -chdir=${TF_PATH} plan
 
-            - name: Terraform Apply
-              if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-              run: terraform -chdir=${TF_PATH} apply -auto-approve
+        - name: Terraform Apply
+          if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+          run: terraform -chdir=${TF_PATH} apply -auto-approve
 
-    terraform-destroy:
-        name: Terraform Destroy
-        runs-on: ubuntu-latest
-        needs: terraform-apply
-        permissions:
-            id-token: write
-            contents: read
-        env:
-            TF_PATH: ./terraform/environments/dev
+        - name: Terraform Output
+          id: terraform-output
+          run: |
+            echo "KAFKA_CLUSTER_NAME=$(terraform -chdir=${TF_PATH} output -raw eks_cluster_name)" >> $GITHUB_OUTPUT
+            echo "KAFKA_CLUSTER_ENDPOINT=$(terraform -chdir=${TF_PATH} output -raw eks_cluster_endpoint)" >> $GITHUB_OUTPUT
+            echo "KAFKA_CLUSTER_ARN=$(terraform -chdir=${TF_PATH} output -raw eks_cluster_arn)" >> $GITHUB_OUTPUT
 
-        steps: 
-            - name: Checkout
-              uses: actions/checkout@v4
+  kubectl-setup:
+    runs-on: ubuntu-latest
+    needs: terraform-apply
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      TF_PATH: ./terraform/environments/dev
 
-            - name: Setup Terraform
-              uses: hashicorp/setup-terraform@v2
-              with:
-                  terraform_version: 1.5.0
-            
-            - name: Setup AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v3
-              with:
-                  role-to-assume: arn:aws:iam::730335465394:role/github_actions_role
-                  aws-region: ap-southeast-1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v1
+        with:
+          version: 'latest'
+      
+      - name: Setup AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::730335465394:role/github_actions_role
+          aws-region: ap-southeast-1
 
-            - name: Terraform Initialize
-              run: terraform -chdir=${TF_PATH} init 
-
-            - name: Terraform Destroy
-              run: terraform -chdir=${TF_PATH} destroy -auto-approve
+      - name: Configure kubectl
+        run: aws eks --region ap-southeast-1 update-kubeconfig --name $(steps.terraform-output.outputs.KAFKA_CLUSTER_NAME)
+      
+      - name: Run kubectl commands
+        run: |
+          kubectl get nodes
+          kubectl get pods --all-namespaces
