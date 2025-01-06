@@ -35,7 +35,11 @@ module "eks" {
         eks_node = {
             desired_capacity = var.desired_capacity
             instance_type = var.instance_type
+            metadata_options = {
+                instance_metadata_tags = "disabled"
+            }
         }
+        
     }
 }
 
