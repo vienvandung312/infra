@@ -6,7 +6,6 @@ resource "aws_internet_gateway" "main" {
 }
 
 resource "aws_eip" "nat" {
-    count = 1
     tags = {
         Name = "main-nat-eip"
     }
@@ -14,7 +13,7 @@ resource "aws_eip" "nat" {
 
 resource "aws_nat_gateway" "nat" {
     allocation_id = aws_eip.nat.id
-    subnet_id = element(local.private_subnets_ids, 0)
+    subnet_id = element(local.public_subnets_ids, 0)
     tags = {
         Name = "main-nat"
     }
