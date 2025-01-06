@@ -13,5 +13,8 @@ provider "aws" {
 
 module "vm" {
     source = "../../modules/vm"
-    key_pair_name = "k3s-lightsail-key"  
+}
+
+output "instance_ip" {
+    value = module.vm.instance_ip
 }
