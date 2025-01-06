@@ -28,7 +28,7 @@ variable "instance_type" {
 module "eks" {
     source = "terraform-aws-modules/eks/aws"
     cluster_name = var.cluster_name
-    cluster_version = "1.27"
+    cluster_version = "1.28"
     subnet_ids = var.subnets
     vpc_id = var.vpc_id
     eks_managed_node_groups = {
