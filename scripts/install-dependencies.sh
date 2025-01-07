@@ -15,7 +15,9 @@ sudo systemctl enable docker
 sudo usermod -aG docker $USER && newgrp docker
 
 # Install Kubectl
-sudo apt-get install -y kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
 
 # Start Minikube
 minikube start --driver=docker --cpus=2 --memory=2g
