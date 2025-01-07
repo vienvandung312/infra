@@ -16,4 +16,4 @@ sudo usermod -aG docker $USER && newgrp docker
 
 # Start Minikube
 
-minikube start --driver=docker
+minikube start --driver=docker --cpus=2 --memory=2g
