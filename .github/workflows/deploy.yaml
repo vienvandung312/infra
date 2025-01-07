@@ -92,13 +92,9 @@ jobs:
         - name: Get Lightsail Instance
           run: aws lightsail get-instance --instance-name "k3s-lightsail"
 
-        - name: Install MiniKube
+        - name: Install Dependencies
           run: |
-            ssh -i ./tmp/temp_key -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP 'bash -s' < ./scripts/install-minikube.sh
-
-        - name: Install Helm
-          run: |
-            ssh -i ./tmp/temp_key -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP 'bash -s' < ./scripts/install-helm.sh
+            ssh -i ./tmp/temp_key -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP 'bash -s' < ./scripts/install-dependencies.sh
 
         - name: Helm Setup Kafka
           run: |
