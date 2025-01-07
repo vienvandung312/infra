@@ -78,12 +78,21 @@ jobs:
           with:
               role-to-assume: arn:aws:iam::730335465394:role/github_actions_role
               aws-region: ap-southeast-1
+
         - name: Download Keypair artifact
           uses: actions/download-artifact@v3
           with:
               name: lightsail_keypair
-              path: ./tmp/temp_key
+              path: ./tmp
+        - name: Tree Directory
+          run: tree
 
+        - name: Protect Keypair
+          run: chmod 600 ./tmp/temp_key
+
+        - name: Get Lightsail Instance
+          run: aws lightsail get-instance --instance-name "k3s-lightsail"
+          
         - name: Install Helm
           run: |
             ssh -i ./tmp/temp_key -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP 'bash -s' < ./scripts/install-helm.sh

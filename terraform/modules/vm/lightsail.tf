@@ -11,7 +11,6 @@ variable "public_key" {
 resource "aws_lightsail_key_pair" "key_pair" {
     name = var.key_pair_name
     public_key = var.public_key
-  
 }
 
 resource "aws_lightsail_instance" "k3s_node" {
