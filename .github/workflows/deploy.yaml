@@ -16,7 +16,7 @@ jobs:
         contents: read
     env:
         TF_PATH: ./terraform/environments/dev
-        LIGHTSAIL_KEY_PAIR_NAME: github_actions_tmp_key
+        LIGHTSAIL_KEY_PAIR_NAME: github_action_${{ github.run_id }}
     steps: 
         - name: Checkout
           uses: actions/checkout@v4
