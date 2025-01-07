@@ -70,7 +70,8 @@ jobs:
         - name: Generate Temporary SSH Key
           run: |
             mkdir -p ./tmp
-            ssh-keygen -t rsa -b 2048 -f ./tmp/temp_key -q -N ""
+            ssh-keygen -t ed25519 -f ./tmp/temp_key -N ""
+            chmod 600 ./tmp/temp_key
             PUBLIC_KEY=$(cat ./tmp/temp_key.pub)
             echo "PUBLIC_KEY=$PUBLIC_KEY" >> "$GITHUB_ENV"
 
