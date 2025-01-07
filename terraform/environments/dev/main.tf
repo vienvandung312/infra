@@ -15,9 +15,14 @@ variable "key_pair_name" {
     type = string
 }
 
+variable "public_key" {
+    type = string
+}   
+
 module "vm" {
     source = "../../modules/vm"
     key_pair_name = var.key_pair_name
+    public_key = var.public_key
 }
 
 output "instance_ip" {

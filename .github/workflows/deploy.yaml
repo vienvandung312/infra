@@ -46,17 +46,13 @@ jobs:
 
         - name: Terraform Apply
           if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-          run: terraform -chdir=${TF_PATH} apply -auto-approve -var="key_pair_name=${LIGHTSAIL_KEY_PAIR_NAME}"
+          run: terraform -chdir=${TF_PATH} apply -auto-approve -var="key_pair_name=${LIGHTSAIL_KEY_PAIR_NAME}" -var="public_key=${PUBLIC_KEY}"
         
         - name: Get Instance IP
           id: get_instance_ip
           run: |
             INSTANCE_IP=$(terraform -chdir=${TF_PATH} output -raw instance_ip)
             echo "INSTANCE_IP=$INSTANCE_IP" >> "$GITHUB_OUTPUT"
-        
-        - name: Save Temporary SSH Key to Lightsail
-          run: |
-            aws lightsail import-key-pair --key-pair-name ${LIGHTSAIL_KEY_PAIR_NAME} --public-key-base64 "$PUBLIC_KEY" 
         
         - name: Create Keypair artifact
           uses: actions/upload-artifact@v3
@@ -95,8 +91,3 @@ jobs:
         - name: Helm Install Kafka
           run: |
             ssh -i ./tmp/temp_key -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP 'bash -s' < ./scripts/install-kafka.sh
-
-        - name: Remove Temporary SSH Key from Lightsail
-          if: always()
-          run: |
-            aws lightsail delete-key-pair --key-pair-name github_actions_tmp_key
