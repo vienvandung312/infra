@@ -98,4 +98,4 @@ jobs:
 
         - name: Helm Setup Kafka
           run: |
-            ssh -i ./tmp/temp_key -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP 'bash -s' < ./scripts/install-kafka.sh
+            ssh -i ./tmp/temp_key -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP 'bash -s' < ./scripts/deploy-kafka.sh
