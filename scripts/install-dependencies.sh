@@ -7,9 +7,13 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube
 # Install Helm
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
-# Install Docker
+# Install and start Docker
 sudo apt-get update
 sudo apt-get install -y docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $USER && newgrp docker
 
 # Start Minikube
+
 minikube start --driver=docker

@@ -1,4 +1,4 @@
-name: Deploy Kafka on K3s (Lightsail)
+name: Deploy Kafka (Lightsail)
 
 on:
   push:
