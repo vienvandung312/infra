@@ -17,8 +17,12 @@ kafka:
 
 externalAccess:
   enabled: true
+  autoDiscovery:
+    enabled: true
   service:
     type: LoadBalancer
+  
+
 
 controlCenter:
   enabled: true
