@@ -96,6 +96,14 @@ jobs:
           run: |
             ssh -i ./tmp/temp_key -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP 'bash -s' < ./scripts/install-dependencies.sh
 
+        - name: Install Git
+          run: |
+            ssh -i ./tmp/temp_key -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP "sudo apt-get update && sudo apt-get install -y git"
+
+        - name: Clone Repository
+          run: |
+            ssh -i ./tmp/temp_key -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP "git clone https://github.com/vienvandung312/infra.git"
+
         - name: Helm Setup Kafka
           run: |
             ssh -i ./tmp/temp_key -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP 'bash -s' < ./scripts/deploy-kafka.sh
