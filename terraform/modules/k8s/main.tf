@@ -8,7 +8,7 @@ variable "key_pair_name" {
 resource "aws_lightsail_instance" "k8s_node" {
     count = 3
     name = "k8s-${count.index}"
-    availability_zone = element(data.availability_zones.available.names, count.index)
+    availability_zone = element(data.aws_availability_zones.available.names, count.index)
     blueprint_id = "ubuntu_24_04"
     bundle_id = "mini_3_0"
     tags = {
