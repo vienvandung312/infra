@@ -48,7 +48,7 @@ jobs:
             - name: Create inventory artifact
               uses: actions/upload-artifact@v4
               with:
-                name: inventory
+                name: inventory.ini
                 path: ./ansible/inventory.ini
 
     configure:
@@ -73,8 +73,13 @@ jobs:
             - name: Download Inventory
               uses: actions/download-artifact@v4
               with:
-                name: inventory
+                name: inventory.ini
+                path: ./ansible
 
+            - name: Show tree
+              run: |
+                tree .
+            
             - name: Ping Ansible Hosts
               run: |
                 ansible -i ./ansible/inventory.ini all -m ping
