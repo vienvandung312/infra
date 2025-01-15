@@ -1,0 +1,35 @@
+---
+- name: Configure Kubernetes Cluster
+  hosts: k8s_nodes
+  become: true
+  tasks:
+    - name: Install required packages
+      apt:
+        name: 
+          - apt-transport-https
+          - ca-certificates
+          - curl
+        state: present
+        update_cache: yes
+
+    - name: Add Kubernetes GPG key
+      shell: |
+        curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+    - name: Add Kubernetes repository
+      shell: |
+        echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list
+
+    - name: Install kubeadm, kubelet, and kubectl
+      apt:
+        name: 
+          - kubeadm
+          - kubelet
+          - kubectl
+        state: present
+        update_cache: yes
+
+    - name: Disable swap
+      shell: |
+        swapoff -a
+        sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab

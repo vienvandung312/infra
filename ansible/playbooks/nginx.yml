@@ -1,0 +1,26 @@
+---
+- name: Configure Nginx Load Balancer
+  hosts: nginx
+  become: true
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Nginx health check
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Copy Nginx configuration file
+      copy:
+        src: /nginx/nginx.conf
+        dest: /etc/nginx/nginx.conf
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
