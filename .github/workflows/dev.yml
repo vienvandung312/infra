@@ -38,9 +38,9 @@ jobs:
             - name: Write IPs to Inventory
               run: |
                 echo "[nginx]" > ./ansible/inventory.ini
-                terraform -chdir=$TF_PATH output nginx_public_ips | sed 's/,//g' >> ./ansible/inventory.ini
+                terraform -chdir=$TF_PATH output -raw nginx_public_ips | sed 's/,//g' >> ./ansible/inventory.ini
                 echo "[k8s_nodes]" >> ./ansible/inventory.ini
-                terraform -chdir=$TF_PATH output k8s_nodes_public_ip | sed 's/,//g' >> ./ansible/inventory.ini
+                terraform -chdir=$TF_PATH output -raw k8s_nodes_public_ips | sed 's/,//g' >> ./ansible/inventory.ini
                 
                 echo "[nginx:vars]" >> ./ansible/inventory.ini
                 echo "ansible_user=ubuntu" >> ./ansible/inventory.ini
