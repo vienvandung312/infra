@@ -10,7 +10,7 @@ resource "aws_lightsail_instance" "k8s_node" {
     name = "k8s-${count.index}"
     availability_zone = element(data.aws_availability_zones.available.names, count.index)
     blueprint_id = "ubuntu_24_04"
-    bundle_id = "mini_3_0"
+    bundle_id = "small_3_0"
     tags = {
         Name = "k8s-${count.index}"
     }
