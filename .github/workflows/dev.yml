@@ -44,6 +44,12 @@ jobs:
             - name: Check Inventory
               run: |
                 cat ./ansible/inventory.ini
+            
+            - name: Create inventory artifact
+              uses: actions/upload-artifact@v2
+              with:
+                name: inventory
+                path: ./ansible/inventory.ini
 
     configure:
         name: Configure Instances
@@ -63,15 +69,20 @@ jobs:
                 mkdir -p ~/.ssh
                 echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
                 chmod 600 ~/.ssh/id_rsa
+            
+            - name: Download Inventory
+              uses: actions/download-artifact@v2
+              with:
+                name: inventory
 
             - name: Ping Ansible Hosts
               run: |
-                ansible -i /ansible/inventory.ini all -m ping
+                ansible -i ./ansible/inventory.ini all -m ping
             
             - name: Configure Nginx Load Balancer
               run: |
-                ansible-playbook -i /ansible/inventory.ini /ansible/playbooks/nginx.yml
+                ansible-playbook -i ./ansible/inventory.ini ./ansible/playbooks/nginx.yml
 
             - name: Configure Kubernetes Cluster
               run: |
-                ansible-playbook -i /ansible/inventory.ini /ansible/playbooks/k8s.yml
+                ansible-playbook -i ./ansible/inventory.ini ./ansible/playbooks/k8s.yml
