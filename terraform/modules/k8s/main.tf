@@ -1,4 +1,4 @@
-data availability_zones "available" {}
+data "aws_availability_zones" "available" {}
 
 variable "key_pair_name" {
     description = "The name of the key pair to use for the instances"
