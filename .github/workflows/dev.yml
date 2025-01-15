@@ -34,9 +34,6 @@ jobs:
               run: |
                 terraform -chdir=$TF_PATH init
                 terraform -chdir=$TF_PATH apply -auto-approve -var="key_pair_name=${AWS_INSTANCE_SSH_KEYPAIR_NAME}"
-
-            - name: get Tree
-              run: tree
               
             - name: Write IPs to Inventory
               run: |
