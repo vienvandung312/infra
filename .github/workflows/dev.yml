@@ -86,8 +86,8 @@ jobs:
             
             - name: Configure Nginx Load Balancer
               run: |
-                ansible-playbook -i ./ansible/inventory.ini -l nginx ./ansible/playbooks/nginx.yml
+                ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./ansible/inventory.ini -l nginx ./ansible/playbooks/nginx.yml
 
             - name: Configure Kubernetes Cluster
               run: |
-                ansible-playbook -i ./ansible/inventory.ini -l k8s_nodes ./ansible/playbooks/k8s.yml
+                ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./ansible/inventory.ini -l k8s_nodes ./ansible/playbooks/k8s.yml
