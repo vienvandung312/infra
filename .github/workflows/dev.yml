@@ -36,8 +36,11 @@ jobs:
                 terraform -chdir=$TF_PATH apply -auto-approve -var="key_pair_name=${AWS_INSTANCE_SSH_KEYPAIR_NAME}"
 
             - name: Write IPs to Inventory
-              run: ./scripts/generate_inventory.sh $TF_PATH
-            
+              run: |
+                chmod +x ./scripts/generate_inventory.sh
+                ./scripts/generate_inventory.sh $TF_PATH
+              shell: bash
+
             - name: Check Inventory
               run: |
                 cat ./ansible/inventory.ini
