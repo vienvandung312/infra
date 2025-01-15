@@ -82,7 +82,7 @@ jobs:
             
             - name: Ping Ansible Hosts
               run: |
-                ansible -i ./ansible/inventory.ini all -m ping
+                ANSIBLE_HOST_KEY_CHECKING=False ansible -i ./ansible/inventory.ini all -m ping
             
             - name: Configure Nginx Load Balancer
               run: |
