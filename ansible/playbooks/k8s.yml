@@ -14,11 +14,11 @@
 
     - name: Add Kubernetes GPG key
       shell: |
-        curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+        sudo curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/kubernetes-archive-keyring.gpg
 
     - name: Add Kubernetes repository
       shell: |
-        echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list
+        echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
     - name: Install kubeadm, kubelet, and kubectl
       apt:
@@ -33,3 +33,9 @@
       shell: |
         swapoff -a
         sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+
+    - name: Enable and start kubelet service
+      service:
+        name: kubelet
+        enabled: yes
+        state: started
