@@ -9,12 +9,6 @@
         state: present
         update_cache: yes
 
-    - name: Nginx health check
-      service:
-        name: nginx
-        state: started
-        enabled: true
-
     - name: Copy Nginx configuration file
       copy:
         src: /home/runner/work/infra/infra/nginx/nginx.conf
