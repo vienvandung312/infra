@@ -17,8 +17,9 @@
 
     - name: Copy Nginx configuration file
       copy:
-        src: /nginx/nginx.conf
+        src: ./nginx/nginx.conf
         dest: /etc/nginx/nginx.conf
+        remote_src: true
 
     - name: Restart Nginx
       service:
