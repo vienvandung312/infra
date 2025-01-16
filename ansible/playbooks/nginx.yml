@@ -19,7 +19,6 @@
       copy:
         src: ./nginx/nginx.conf
         dest: /etc/nginx/nginx.conf
-        remote_src: true
 
     - name: Restart Nginx
       service:
