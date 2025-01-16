@@ -82,10 +82,6 @@ jobs:
                 sudo cp ./ansible/ansible.cfg /etc/ansible/ansible.cfg
               shell: bash
             
-            - name: Show tree
-              run: |
-                tree .
-            
             - name: Ping Ansible Hosts
               run: |
                 ansible -i ./ansible/inventory.ini all -m ping
