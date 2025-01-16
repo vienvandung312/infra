@@ -1,5 +1,3 @@
-data "aws_availability_zones" "available" {}
-
 resource "aws_lightsail_instance" "k8s_master" {
     count = 1
     name = "k8s-master-${count.index}"

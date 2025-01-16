@@ -1,6 +1,3 @@
-data "aws_availability_zones" "available" {}
-
-
 resource "aws_lightsail_instance" "k8s_worker" {
     count = 2
     name = "k8s-worker-${count.index}"
