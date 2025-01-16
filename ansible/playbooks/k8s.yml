@@ -9,25 +9,17 @@
           - apt-transport-https
           - ca-certificates
           - curl
+          - gnupg
         state: present
         update_cache: yes
 
-    - name: Add Kubernetes GPG key
-      shell: |
-        sudo curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/kubernetes-archive-keyring.gpg
-
-    - name: Add Kubernetes repository
-      shell: |
-        echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
     - name: Install kubeadm, kubelet, and kubectl
-      apt:
+      snap:
         name: 
           - kubeadm
           - kubelet
           - kubectl
         state: present
-        update_cache: yes
 
     - name: Disable swap
       shell: |
