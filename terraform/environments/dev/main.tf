@@ -29,6 +29,10 @@ output "nginx_public_ips" {
     value = module.nginx.nginx_public_ips
 }
 
-output "k8s_node_public_ips" {
-    value = module.k8s.k8s_node_public_ips
+output "k8s_master_public_ips" {
+    value = module.k8s.k8s_master_public_ips
+}
+
+output "k8s_worker_public_ips" {
+    value = module.k8s.k8s_worker_public_ips
 }
