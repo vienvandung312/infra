@@ -1,10 +1,5 @@
 data "aws_availability_zones" "available" {}
 
-variable "key_pair_name" {
-    description = "The name of the key pair to use for the instances"
-    type = string
-}
-
 resource "aws_lightsail_instance" "k8s_master" {
     count = 1
     name = "k8s-master-${count.index}"
