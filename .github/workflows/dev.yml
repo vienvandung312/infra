@@ -78,8 +78,8 @@ jobs:
             
             - name: Copy Ansible Config
               run: |
-                mkdir -p ~/etc/ansible
-                cp ./ansible/ansible.cfg ~/etc/ansible/ansible.cfg
+                sudo mkdir -p /etc/ansible
+                sudo cp ./ansible/ansible.cfg /etc/ansible/ansible.cfg
               shell: bash
             
             - name: Show tree

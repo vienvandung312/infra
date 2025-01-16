@@ -15,11 +15,6 @@
         state: started
         enabled: true
 
-    - name: Create Nginx configuration directory
-      file: 
-        path: /etc/nginx
-        state: directory
-
     - name: Copy Nginx configuration file
       copy:
         src: /nginx/nginx.conf
