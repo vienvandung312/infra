@@ -78,6 +78,7 @@ jobs:
             
             - name: Copy Ansible Config
               run: |
+                mkdir -p ~/etc/ansible
                 cp ./ansible/ansible.cfg ~/etc/ansible/ansible.cfg
               shell: bash
             
