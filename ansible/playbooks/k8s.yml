@@ -10,6 +10,7 @@
           - ca-certificates
           - curl
           - gnupg
+          - snapd
         state: present
         update_cache: yes
 
@@ -20,6 +21,7 @@
           - kubelet
           - kubectl
         state: present
+        classic: true
 
     - name: Disable swap
       shell: |
