@@ -17,6 +17,27 @@ resource "aws_lightsail_instance" "nginx_instance" {
     key_pair_name = var.key_pair_name
 }
 
+resource "aws_lightsail_instance_public_ports" "k8s_lb_ports" {
+    instance_name = aws_lightsail_instance.nginx_instance.name
+    port_info {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+    }
+    port_info {
+        from_port = 443
+        to_port = 443
+        protocol = "tcp"
+    }
+
+    port_info {
+      from_port = 6443
+      to_port = 6443
+      protocol = "tcp"
+    }
+  
+}
+
 output "nginx_public_ips" {
     value = aws_lightsail_instance.nginx_instance[*].public_ip_address
 }

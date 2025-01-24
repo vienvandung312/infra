@@ -3,17 +3,17 @@ events {
 }
 
 http {
-    upstream worker {
-    {% for host in groups['k8s_worker'] %}
+    upstream master {
+    {% for host in groups['k8s_master'] %}
         server {{ host }};
     {% endfor %}
     }
 
     server {
-        listen 80;
+        listen 6443;
 
         location / {
-            proxy_pass http://worker;
+            proxy_pass http://master;
         }
     }
 }
