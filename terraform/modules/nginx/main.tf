@@ -18,7 +18,8 @@ resource "aws_lightsail_instance" "nginx_instance" {
 }
 
 resource "aws_lightsail_instance_public_ports" "k8s_lb_ports" {
-    instance_name = aws_lightsail_instance.nginx_instance.name
+    count = 1
+    instance_name = aws_lightsail_instance.nginx_instance[count.index].name
     port_info {
         from_port = 80
         to_port = 80
