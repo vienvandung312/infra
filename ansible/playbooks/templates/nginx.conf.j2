@@ -4,7 +4,7 @@ events {
 
 http {
     upstream worker {
-    {% for host in groups['workers'] %}
+    {% for host in groups['k8s_worker'] %}
         server {{ host }};
     {% endfor %}
     }
