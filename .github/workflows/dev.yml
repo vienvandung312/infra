@@ -90,6 +90,10 @@ jobs:
               run: |
                 ansible-playbook -i ./ansible/inventory.ini -l nginx ./ansible/playbooks/nginx.yml
 
-            - name: Configure Kubernetes Cluster
+            - name: Configure Kubernetes Masters
               run: |
-                ansible-playbook -i ./ansible/inventory.ini -l k8s_nodes ./ansible/playbooks/k8s.yml
+                ansible-playbook -i ./ansible/inventory.ini -l k8s_master ./ansible/playbooks/k8s_master.yml -e "load_balancer_ip=$(cat ./ansible/inventory.ini | grep nginx | awk '{print $2}')" -e "k8s_version=1.32"
+
+            - name: Configure Kubernetes Workers
+              run: |
+                ansible-playbook -i ./ansible/inventory.ini -l k8s_worker ./ansible/playbooks/k8s_worker.yml

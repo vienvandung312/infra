@@ -1,6 +1,6 @@
 ---
 - name: Configure Kubernetes Cluster
-  hosts: k8s_nodes
+  hosts: k8s_worker
   become: true
   tasks:
     - name: Install required packages
@@ -14,12 +14,11 @@
         state: present
         update_cache: yes
 
-    - name: Install kubeadm, kubelet, and kubectl
+    - name: Install kubeadm and kubelet
       snap:
         name: 
           - kubeadm
           - kubelet
-          - kubectl
         state: present
         classic: true
 

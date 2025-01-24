@@ -1,0 +1,66 @@
+---
+- name: Configure Kubernetes Cluster
+  hosts: k8s_master
+  become: true
+  tasks:
+    - name: Install required packages
+      apt:
+        name: 
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - snapd
+        state: present
+        update_cache: yes
+
+    - name: Install kubeadm
+      snap:
+        name: kubeadm
+        state: present
+        channel: "{{ k8s_version }}/stable"
+        classic: true
+
+    - name: Install kubelet
+      snap:
+        name: kubelet
+        state: present
+        channel: "{{ k8s_version }}/stable"
+        classic: true
+
+    - name: Install kubectl
+      snap:
+        name: kubectl
+        state: present
+        channel: "{{ k8s_version }}/stable"
+        classic: true
+
+    - name: Hold kubeadm, kubelet, and kubectl
+      shell: |
+        snap refresh kubeadm --hold
+        snap refresh kubelet --hold 
+        snap refresh kubectl --hold
+
+    - name: Disable swap
+      shell: |
+        swapoff -a
+        sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+        
+    
+
+    - name: Initialize Kubernetes Control Plane
+      shell: |
+        kubeadm init --pod-network-cidr=192.168.0.0/16 --control-plane-endpoint={{ load_balancer_ip }}
+        mkdir -p $HOME/.kube
+        cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+        chown $(id -u):$(id -g) $HOME/.kube/config
+
+    - name: Install Calico Network Plugin
+      shell: |
+        kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+    
+    - name: Print Join Command
+      shell: |
+        kubeadm token create --print-join-command > /tmp/join-command.sh
+        chmod +x /tmp/join-command.sh
+        cat /tmp/join-command.sh
