@@ -19,7 +19,7 @@
       shell: |
         mkdir -p -m 755 /etc/apt/keyrings
         curl -fsSL https://pkgs.k8s.io/core:/stable:/v{{ k8s_version.split('.')[:2] | join('.') }}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    
+        
     - name: Install Kubernetes APT Repository
       shell: |
         echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ k8s_version.split('.')[:2] | join('.') }}/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
@@ -29,13 +29,6 @@
         apt-get update
         apt-get install -y kubelet kubeadm kubectl
         apt-mark hold kubelet kubeadm kubectl
-
-    - name: Install cri-tools
-      shell: |
-        curl -LOsS https://github.com/kubernetes-sigs/cri-tools/releases/download/v{{ k8s_version }}/crictl-v{{ k8s_version }}-linux-amd64.tar.gz
-        tar zxvf crictl-v{{ k8s_version }}-linux-amd64.tar.gz -C /usr/local/bin
-        rm crictl-v{{ k8s_version }}-linux-amd64.tar.gz
-        crictl --version
 
     - name: Config cri-tools
       shell: |
