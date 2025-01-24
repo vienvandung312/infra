@@ -9,10 +9,13 @@
         state: present
         update_cache: yes
 
-    - name: Copy Nginx configuration file
-      copy:
-        src: /home/runner/work/infra/infra/nginx/nginx.conf
+    - name: Generate Nginx configuration file
+      template:
+        src: ./templates/nginx.conf.j2
         dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: 0644
 
     - name: Restart Nginx
       service:
