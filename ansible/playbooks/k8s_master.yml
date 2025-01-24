@@ -15,36 +15,24 @@
         state: present
         update_cache: yes
 
-    - name: Install kubeadm
-      snap:
-        name: kubeadm
-        state: present
-        channel: "{{ k8s_version }}/stable"
-        classic: true
-
-    - name: Install kubelet
-      snap:
-        name: kubelet
-        state: present
-        channel: "{{ k8s_version }}/stable"
-        classic: true
-
-    - name: Install kubectl
-      snap:
-        name: kubectl
-        state: present
-        channel: "{{ k8s_version }}/stable"
-        classic: true
-
-    - name: Hold kubeadm, kubelet, and kubectl
+    - name: Add Kubernetes GPG key
       shell: |
-        snap refresh kubeadm --hold
-        snap refresh kubelet --hold 
-        snap refresh kubectl --hold
+        mkdir -p -m 755 /etc/apt/keyrings
+        curl -fsSL https://pkgs.k8s.io/core:/stable:/v$(echo {{ k8s_version }} | awk -F. '{print $1 "." $2}')/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+        
+    - name: Install Kubernetes APT Repository
+      shell: |
+        echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v$(echo {{ k8s_version }} | awk -F. '{print $1 "." $2}')/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+    - name: Install kubeadm, kubelet, and kubectl
+      shell: |
+        apt-get update
+        apt-get install -y kubelet kubeadm kubectl
+        apt-mark hold kubelet kubeadm kubectl
 
     - name: Install cri-tools
       shell: |
-        curl -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/v{{ k8s_version }}/crictl-v{{ k8s_version }}-linux-amd64.tar.gz
+        curl -LOsS https://github.com/kubernetes-sigs/cri-tools/releases/download/v{{ k8s_version }}/crictl-v{{ k8s_version }}-linux-amd64.tar.gz
         tar zxvf crictl-v{{ k8s_version }}-linux-amd64.tar.gz -C /usr/local/bin
         rm crictl-v{{ k8s_version }}-linux-amd64.tar.gz
         crictl --version
