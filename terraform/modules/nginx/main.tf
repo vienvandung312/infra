@@ -23,7 +23,7 @@ resource "aws_lightsail_instance_public_ports" "k8s_lb_ports" {
     port_info {
         from_port = 22
         to_port = 22
-        protocol = "ssh"
+        protocol = "tcp"
     }
     port_info {
         from_port = 80
