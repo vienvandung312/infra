@@ -14,6 +14,7 @@ jobs:
         env: 
             TF_PATH: ./terraform/environments/dev
             AWS_INSTANCE_SSH_KEYPAIR_NAME: github_action_ssh
+            K8S_VERSION: 1.31.1
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -92,7 +93,7 @@ jobs:
 
             - name: Configure Kubernetes Masters
               run: |
-                ansible-playbook -i ./ansible/inventory.ini -l k8s_master ./ansible/playbooks/k8s_master.yml -e "load_balancer_ip=$(cat ./ansible/inventory.ini | grep nginx | awk '{print $2}')" -e "k8s_version=1.32"
+                ansible-playbook -i ./ansible/inventory.ini -l k8s_master ./ansible/playbooks/k8s_master.yml -e "load_balancer_ip=$(cat ./ansible/inventory.ini | grep nginx | awk '{print $2}')" -e "k8s_version=${K8S_VERSION}"
 
             - name: Configure Kubernetes Workers
               run: |

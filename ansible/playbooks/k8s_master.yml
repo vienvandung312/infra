@@ -11,6 +11,7 @@
           - curl
           - gnupg
           - snapd
+          - containerd
         state: present
         update_cache: yes
 
@@ -41,12 +42,30 @@
         snap refresh kubelet --hold 
         snap refresh kubectl --hold
 
+    - name: Install cri-tools
+      shell: |
+        curl -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/v{{ k8s_version }}/crictl-v{{ k8s_version }}-linux-amd64.tar.gz
+        tar zxvf crictl-v{{ k8s_version }}-linux-amd64.tar.gz -C /usr/local/bin
+        rm crictl-v{{ k8s_version }}-linux-amd64.tar.gz
+        crictl --version
+
+    - name: Config cri-tools
+      shell: |
+        tee /etc/crictl.yaml <<EOF
+        runtime-endpoint: unix:///var/run/containerd/containerd.sock
+        EOF
+        crictl info
+
     - name: Disable swap
       shell: |
         swapoff -a
         sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
         
-    
+    - name: Enable and start kubelet service
+      service:
+        name: kubelet
+        enabled: yes
+        state: started
 
     - name: Initialize Kubernetes Control Plane
       shell: |
