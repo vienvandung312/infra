@@ -22,7 +22,7 @@
         
     - name: Install Kubernetes APT Repository
       shell: |
-        echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ k8s_version.split('.')[0] }}.{{ k8s_version.split('.')[1] }}/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+        echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ k8s_version.split('.')[:2] | join('.') }}/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
     - name: Install kubeadm, kubelet, and kubectl
       shell: |
