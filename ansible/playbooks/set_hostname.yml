@@ -1,0 +1,21 @@
+---
+
+- name: Set Hostname and Update Hosts File
+  hosts: all 
+  become: true 
+
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: "{{ hostname }}"
+        state: present
+
+    - name: Update hosts file
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ ansible_default_ipv4.address }} {{ hostname }}"
+        regexp: "^{{ ansible_default_ipv4.address }}"
+        state: present
+    
+    - name: Ensure network service is persistent
+      shell: hostnamectl set-hostname {{ hostname }}

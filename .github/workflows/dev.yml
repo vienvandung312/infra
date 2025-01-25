@@ -87,15 +87,8 @@ jobs:
             - name: Ping Ansible Hosts
               run: |
                 ansible -i ./ansible/inventory.ini all -m ping
+
+            - name: Set Hostname
+              run: |
+                ansible-playbook -i ./ansible/inventory.ini ./ansible/playbooks/set_hostname.yml 
             
-            - name: Configure Nginx Load Balancer
-              run: |
-                ansible-playbook -i ./ansible/inventory.ini -l nginx ./ansible/playbooks/nginx.yml
-
-            - name: Configure Kubernetes Masters
-              run: |
-                ansible-playbook -i ./ansible/inventory.ini -l k8s_master ./ansible/playbooks/k8s_master.yml -e "load_balancer_ip=$(cat ./ansible/inventory.ini | grep nginx | awk '{print $2}')" -e "k8s_version=${K8S_VERSION}"
-
-            - name: Configure Kubernetes Workers
-              run: |
-                ansible-playbook -i ./ansible/inventory.ini -l k8s_worker ./ansible/playbooks/k8s_worker.yml

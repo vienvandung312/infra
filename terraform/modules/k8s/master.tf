@@ -1,5 +1,5 @@
 resource "aws_lightsail_instance" "k8s_master" {
-    count = 1
+    count = 2
     name = "k8s-master-${count.index}"
     availability_zone = element(data.aws_availability_zones.available.names, count.index)
     blueprint_id = "ubuntu_24_04"
