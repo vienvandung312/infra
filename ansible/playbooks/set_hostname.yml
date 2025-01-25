@@ -8,7 +8,7 @@
     - name: Set hostname
       hostname:
         name: "{{ hostname }}"
-        state: present
+        use: debian
 
     - name: Update hosts file
       lineinfile:
