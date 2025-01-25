@@ -15,9 +15,16 @@
         state: present
         update_cache: yes
 
+    - name: Echo Kubernetes Version
+      debug:
+        msg: | 
+          "Kubernetes Version: {{ k8s_version }}"
+          "Kubernetes Major: {{ k8s_version.split('.')[:2] | join('.') }}"
+
     - name: Add Kubernetes GPG key
       shell: |
         mkdir -p -m 755 /etc/apt/keyrings
+        echo "{{ k8s_version.split('.')[:2] | join('.') }}"
         curl -fsSL https://pkgs.k8s.io/core:/stable:/v{{ k8s_version.split('.')[:2] | join('.') }}/deb/Release.key | sudo gpg --dearmor -fo /etc/apt/keyrings/kubernetes-apt-keyring.gpg
         
     - name: Install Kubernetes APT Repository
